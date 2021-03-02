@@ -67,7 +67,6 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Сделать мушку из павлиньих перьев')
         inputbox.send_keys(Keys.ENTER)
-        #time.sleep(1)
         
         # Страница снова обновляется, и теперь показывает оба элемента списка
         self.wait_for_row_in_list_table('1: Купить павлиньи перья')
@@ -91,7 +90,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # She notices that her list has a unique URL
         edith_list_url = self.browser.current_url
-        self.assertRegex(edith_list_url, 'listls/.+')
+        self.assertRegex(edith_list_url, 'lists/.+')
 
         # Francis -- new user -- come to site
 
@@ -102,7 +101,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Francis visits the home page. No sign of Edith's list 
         self.browser.get(self.live_server_url)
-        pate_text = self.browser.find_element_by_tag_name('body').text
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Купить павлиньи перья', page_text)
         self.assertNotIn('Сделать мушку', page_text)
 
