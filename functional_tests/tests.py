@@ -76,8 +76,52 @@ class NewVisitorTest(LiveServerTestCase):
         # Эдит интересно, запомнит ли сайт ее список. Далее она видит, что
         # сайт сгенерировал для нее уникальный URL-адрес -- об этом
         # выводится небольшой текст с объяснениямию
-        self.fail('Finish test!')
+        # self.fail('Finish test!')
         # Она посещает этот URL-адрес -- ее список по-прежнему там.
         
         # Удовлетворенная, она снова ложится спать
         
+    def test_multiple_users_can_start_list_at_different_urls(self):
+        # Editih start new list
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Купить павлиньи перья')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Купить павлиньи перья')
+
+        # She notices that her list has a unique URL
+        edith_list_url = self.browser.current_url
+        self.assertRegex(edith_list_url, 'listls/.+')
+
+        # Francis -- new user -- come to site
+
+        ## We use a new browser session to ensure that any information from Edith 
+        ## does not pass through cookies.
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Francis visits the home page. No sign of Edith's list 
+        self.browser.get(self.live_server_url)
+        pate_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Купить павлиньи перья', page_text)
+        self.assertNotIn('Сделать мушку', page_text)
+
+        # Фрэнсис начинает новый список, вводя новый элемент. Он менее
+        # интересен, чем список Эдит...
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Купить молоко')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Купить молоко')
+
+        # Фрэнсис получает уникальный URL-адрес
+        francis_list_url = self.browser.current_url
+        self.assertRegex(francis_list_url, '/lists/.+')
+        self.assertNotEqual(francis_list_url, edith_list_url)
+
+        # Фрэнсис получает уникальный URL-адрес
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Купить павлиньи перья', page_text)
+        self.assertIn('Купить молоко', page_text)
+
+        # Удовлетворенные, они оба ложатся спать
+
