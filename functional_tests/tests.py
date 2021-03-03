@@ -19,7 +19,7 @@ class NewVisitorTest(LiveServerTestCase):
     def tearDown(self):
         '''демонтаж'''
         self.browser.quit()
-    
+
     def wait_for_row_in_list_table(self, row_text):
         start_time = time.time()
         while True:
@@ -51,11 +51,11 @@ class NewVisitorTest(LiveServerTestCase):
             inputbox.get_attribute('placeholder'),
             'Enter a to-do item'
         )
-        
+
         # Она набирает в текстовом поле "Купить павлиньи перья"  (ее хобби --
         # вязания рыболовных мушек)
         inputbox.send_keys('Купить павлиньи перья')
-        
+
         # Когда она нажимает enter, страница обновляется, и теперь страница
         # содержит "1: Купить павлиньи перья" в качестве элемента списка
         inputbox.send_keys(Keys.ENTER)
@@ -67,21 +67,21 @@ class NewVisitorTest(LiveServerTestCase):
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Сделать мушку из павлиньих перьев')
         inputbox.send_keys(Keys.ENTER)
-        
+
         # Страница снова обновляется, и теперь показывает оба элемента списка
         self.wait_for_row_in_list_table('1: Купить павлиньи перья')
         self.wait_for_row_in_list_table('2: Сделать мушку из павлиньих перьев')
-        
+
         # Эдит интересно, запомнит ли сайт ее список. Далее она видит, что
         # сайт сгенерировал для нее уникальный URL-адрес -- об этом
         # выводится небольшой текст с объяснениямию
         # self.fail('Finish test!')
         # Она посещает этот URL-адрес -- ее список по-прежнему там.
-        
+
         # Удовлетворенная, она снова ложится спать
-        
+
     def test_multiple_users_can_start_list_at_different_urls(self):
-        # Editih start new list
+        # Edith start new list
         self.browser.get(self.live_server_url)
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Купить павлиньи перья')
@@ -94,12 +94,12 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Francis -- new user -- come to site
 
-        ## We use a new browser session to ensure that any information from Edith 
+        ## We use a new browser session to ensure that any information from Edith
         ## does not pass through cookies.
         self.browser.quit()
         self.browser = webdriver.Firefox()
 
-        # Francis visits the home page. No sign of Edith's list 
+        # Francis visits the home page. No sign of Edith's list
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Купить павлиньи перья', page_text)
