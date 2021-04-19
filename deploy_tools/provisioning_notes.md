@@ -15,10 +15,16 @@
 ## Конфигурация виртуального узла Nginx
 * см. nginx.template.conf
 * заменить SITENAME, например, на stagin.my-domain.com
+* sudo ln -s ../sites-available/superlists-staging.banan.cyou /etc/nginx/sites-enabled/superlists-staging.banan.cyou
+* sudo systemctl reload nginx
+* sudo nginx -t
 
 ## Служба Systemd
 * см. gunicorn-systemd.template.service
 * заменить SITENAME, например, на stagin.my-domain.com
+* sudo systemctl daemon-reload
+* sudo systemctl enable gunicorn-SITENAME
+* sudo systemctl (re)start gunicorn-SITENAME
 
 ## Структура папок
 ```
