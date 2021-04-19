@@ -74,6 +74,10 @@ def _update_database(source_folder):
 def _config_nginx(source_folder, site_name):
     run(f'sed "s/SITENAME/{site_name}/g" {source_folder}/deploy_tools/nginx.template.conf '
         f'| sudo tee /etc/nginx/sites-available/{site_name}')
+    try:
+        run (f'sudo rm /etc/nginx/sites-enabled/{site_name}')
+    except:
+        pass
     run(f'sudo ln -s ../sites-available/{site_name} /etc/nginx/sites-enabled/{site_name}')
 
 
