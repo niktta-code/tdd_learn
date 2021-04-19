@@ -22,6 +22,8 @@ def config_server():
     source_folder = site_folder + '/source'
 
     _config_nginx(source_folder, env.host)
+    _systemd_config(source_folder, env.host)
+    _run_services(env.host)
 
 
 def _create_directory_structure_if_necessary(site_folder):
@@ -72,4 +74,16 @@ def _update_database(source_folder):
 def _config_nginx(source_folder, site_name):
     run(f'sed "s/SITENAME/{site_name}/g" {source_folder}/deploy_tools/nginx.template.conf '
         f'| sudo tee /etc/nginx/sites-available/{site_name}')
-    run()
+    run(f'sudo ln -s ../sites-available/{site_name} /etc/nginx/sites-enabled/{site_name}')
+
+
+def _systemd_config(source_folder, site_name):
+    run(f'sed "s/SITENAME/{site_name}/g" {source_folder}/deploy_tools/gunicorn-systemd.template.service '
+        f'| sudo tee /etc/systemd/system/gunicorn-{site_name}.service')
+
+
+def _run_services(site_name):
+    run('sudo systemctl daemon-reload')
+    run('sudo systemctl reload nginx')
+    run(f'sudo systemctl enable gunicorn-{site_name}')
+    run(f'sudo systemctl restart gunicorn-{site_name}')

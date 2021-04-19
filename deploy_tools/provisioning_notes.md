@@ -36,3 +36,13 @@
         ├── static
         └── virtualenv
 ```
+
+
+## fab deploy
+
+fab deploy:host=nikita@superlists.banan.cyou
+
+
+## fab config erver
+
+fab config_server:host=nikita@superlists.banan.cyou
