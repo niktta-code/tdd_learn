@@ -13,7 +13,7 @@ class ItemValidationTest(FunctionalTest):
 
         # Браузер перехватывает запрос и не загружает страницу со списком
         self.wait_for(lambda: self.browser.find_element_by_css_selector('#id_text:invalid'))
-        
+
         # Она пробует снова, теперь с неким текстом для элемента, и теперь
         # это срабатывает
         self.get_item_input_box().send_keys('Buy milk')
