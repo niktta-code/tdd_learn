@@ -15,6 +15,7 @@ def deploy():
     _update_virtualenv(source_folder)
     _update_static_files(source_folder)
     _update_database(source_folder)
+    _run_services(env.host)
 
 
 def config_server():
